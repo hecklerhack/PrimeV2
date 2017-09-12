@@ -15,7 +15,6 @@
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         
-        
         <title>Job Finder | Sign Up</title>
         <style>
             * { 
@@ -79,28 +78,29 @@
                 <!-- form -->
                 <div class="ten wide column">
                   <!-- sign up form -->
-                  <form id = "candidate_form" name = "signup" class="ui form" method="post" action="db.php" onsubmit="return false">
+                  <form id = "candidate_form" name = "signup" class="ui form" method="post" action="{{route('register')}}" onsubmit="return false">
                     <!-- step 1 -->
+                    {{ csrf_field() }}
                     <div data-content="1">
                       <div class="field">
                         <label>Name</label>
                         <div class="two fields">
                           <div class="field">
-                            <input type="text" id="fname" name="candidate[first-name]" placeholder="First Name" maxlength="25">
+                            <input type="text" id="fname" name="first_name" placeholder="First Name" maxlength="25">
                           </div>
                           <div class="field">
-                            <input type="text" id="lname" name="candidate[last-name]" placeholder="Last Name" maxlength="25" >
+                            <input type="text" id="lname" name="last_name" placeholder="Last Name" maxlength="25" >
                           </div>
                         </div>
                       </div>
                       <div class="field">
                         <label>Mobile Number</label>
-                        +63 <input type="text" id="mobnum" name="candidate[contact]" pattern="[0-9]{10}" maxlength = "10" name="signup[mob1]" placeholder="Mobile Number" maxlength="10" >
+                        +63 <input type="text" id="mobnum" name="contact" pattern="[0-9]{10}" maxlength = "10" name="signup[mob1]" placeholder="Mobile Number" maxlength="10" >
                       </div>
                         
                     <div class="field">
                         <label>Telephone number</label>
-                        <input type="text" id="telnum" name="candidate[tel]" placeholder="Telephone number" pattern="[0-9]{7}" maxlength="7" >
+                        <input type="text" id="telnum" name="tel" placeholder="Telephone number" pattern="[0-9]{7}" maxlength="7" >
                       </div>
                         
                       <div class="field">
@@ -116,15 +116,10 @@
                                               <i class="dropdown icon"></i>
                                               <div class="default text">Select location</div>
                                                 <div class="menu">-->
-												<select name="candidate[location]">
-                                                <?php
-                                                   /* include 'db.php';
-                                                    $db_new = new Database();
-                                                    $result = $db_new->get_location();
-                                                    foreach($result as $row){ ?>
-													<option value="<?php echo $row[1].", ".$row[2]; ?>"><?php echo $row[1].", ".$row[2]; ?></option>
-                                                        <!--<div class="item" data-value="<?php echo $row[0]; ?>"><?php echo $row[1].", ".$row[2]; */?></div>-->
-                                                <?php //} ?>
+												<select name="location">
+                            @foreach($locations as $location)
+                              <option value="{{$location->id}}">{{$location->city.','.$location->province}}</option>
+                            @endforeach
 												</select>
                                                 <!--</div>
                                               </div>-->
@@ -132,23 +127,19 @@
                       </div>
                          <div class="field">
                         <label>Expected Salary</label>
-                        <input type="text" id="expected_salary" name="candidate[expected_salary]" placeholder="Php XXXXXXX" maxlength="7">
+                        <input type="text" id="expected_salary" name="expected_salary" placeholder="Php XXXXXXX" maxlength="7">
                       </div>
                         
                        
                       
                       <div class="field">
                           <label>Latest Position:</label>
-                          <input type="text" name="candidate[latest_position]" id="default"  maxlength="50" list="languages" placeholder="Search for Position">
+                          <input type="text" name="latest_position" id="default"  maxlength="50" list="languages" placeholder="Search for Position">
   
                           <datalist id="languages">
-                            <?php
-                               /* $result1 = $db_new->get_position();
-                                     foreach($result1 as $row1):
-                                         echo "<option value='".$row1[1]."'>";
-                                
-                                     endforeach;*/
-                            ?>
+                            @foreach($positions as $position)
+                              <option value="{{$position->latest_position}}">{{$position->latest_position}}</option>
+                            @endforeach
                           </datalist>
   
                       </div>
@@ -157,27 +148,25 @@
 						<label>Highest Educational Attainment</label>
                         <!--<input type="text" name="candidate[location]" placeholder="Location" required>-->
 						<div class="ui labeled input">
-							<select name="candidate[educ_attain]">
-                         <?php
-                               /* $result = $db_new->get_educ_attain();
-                                   foreach($result as $row){ ?>
-									<option value="<?php echo $row[0];?>"><?php echo $row[1]; */?></option>
-                          <?php// } ?>
-								</select>
-                                </div>
-                      </div>
-                    </div>
+                <select name="educ_attainment">
+                    @foreach($educ_attain as $educ)
+                      <option value="{{$educ->attainment}}">{{$educ->attainment}}</option>
+                    @endforeach
+                </select>
+              </div>
+          </div>
+      </div>
                     <!-- end step 1-->
                     <!-- step 2 -->
                     <div data-content="2">
                       <div class="field">
                         <label>Email</label>
-                        <input onkeyup="check_email()" name="candidate[email]" id="email" placeholder="Email" type="email" pattern = "[a-zA-Z0-9.-_]{1,}@[a-zA-Z0-9.-]{1,}[.]{1}[a-zA-Z0-9]{2,}" maxlength="55">
+                        <input onkeyup="check_email()" name="email" id="email" placeholder="Email" type="email" pattern = "[a-zA-Z0-9.-_]{1,}@[a-zA-Z0-9.-]{1,}[.]{1}[a-zA-Z0-9]{2,}" maxlength="55">
                         <div id="email_exists" style="display: none;"></div>                      
                       </div>
                       <div class="field">
                         <label>Password</label>
-                        <input type="password" id="pass" name="candidate[pass]" placeholder="Password" minlength="8" >
+                        <input type="password" id="pass" name="pass" placeholder="Password" minlength="8" >
                       </div>
                       <div class="field">
                         <label>Confirm Password</label>
@@ -238,7 +227,7 @@
                             inline: true,
                             fields: {
                                 fname: {
-                                identifier: 'candidate[first-name]',
+                                identifier: 'first_name',
                                 rules: [
                                   {
                                     type   : 'empty',
@@ -246,7 +235,7 @@
                                   }    
                                 ]},
                                 lname: {
-                                identifier: 'candidate[last-name]',
+                                identifier: 'last-name',
                                 rules: [
                                   {
                                     type   : 'empty',
@@ -254,7 +243,7 @@
                                   }    
                                 ]},
                                 expected_salary: {
-                                identifier: 'candidate[expected_salary]',
+                                identifier: 'expected_salary',
                                 rules: [
                                   {
                                     type   : 'empty',
@@ -262,7 +251,7 @@
                                   }    
                                 ]},
                                 mob: {
-                                identifier: 'candidate[contact]',
+                                identifier: 'contact',
                                 rules: [
                                   {
                                     type   : 'empty',
@@ -278,7 +267,7 @@
                                   }
                                 ]},
                                 tel: {
-                                identifier: 'candidate[tel]',
+                                identifier: 'tel',
                                 rules: [
                                   {
                                     type   : 'empty',
@@ -294,7 +283,7 @@
                                   }
                                 ]},
                                 expected_salary: {
-                                identifier: 'candidate[expected_salary]',
+                                identifier: 'expected_salary',
                                 rules: [
                                   {
                                     type   : 'empty',
@@ -306,7 +295,7 @@
                                   }
                                 ]},
                                 latest_position: {
-                                identifier: 'candidate[latest_position]',
+                                identifier: 'latest_position',
                                 rules: [
                                   {
                                     type   : 'empty',
@@ -329,7 +318,7 @@
                             inline: true,
                             fields: {
                                 email: {
-                                identifier: 'candidate[email]',
+                                identifier: 'email',
                                 rules: [
                                   {
                                     type   : 'empty',
@@ -341,7 +330,7 @@
                                   }
                                 ]},
                             pass: {
-                                identifier: 'candidate[pass]',
+                                identifier: 'pass',
                                 rules: [
                                   {
                                     type   : 'empty',
@@ -388,7 +377,7 @@
 						$("div[data-content]").hide();
 						$("div[data-content='"+next_step+"']").show();
 						//Sets email
-						$("#email").html($("input[name='candidate[email]']").val());
+						$("#email").html($("input[name='email']").val());
                     }
 					//}
                 });
@@ -409,7 +398,7 @@
             });
             
             
-            
+            //put a laravel function to check if email exists
        /*     function check_email(){
               var email = document.getElementById("email").value;
               $.ajax({
